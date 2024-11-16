@@ -14,9 +14,11 @@ const App = () => {
 
   return (
     <div className="App">
-      <h1>What’s the Movie?</h1>
-      <SearchInput value={search} onChange={handleSearchChange} />
-      <p>Você está buscando por: {search}</p>
+      <h1>Find your movies!</h1>
+      <div>
+        <SearchInput value={search} onChange={handleSearchChange} />
+        <p>Você está buscando pelo filme: {search}</p>
+      </div>
       <MovieList searchValue={debouncedSearch}/>
     </div>
   );

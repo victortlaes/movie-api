@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { fetchMovies } from '../api/movieApi';
+import CircularProgress from '@mui/material/CircularProgress';
 
 const MovieList = ({ searchValue }) => {
   const dispatch = useDispatch();
@@ -10,7 +11,7 @@ const MovieList = ({ searchValue }) => {
     dispatch(fetchMovies(searchValue)); // busca por search
   }, [dispatch, searchValue]);
 
-  if (loading) return <p>Loading...</p>;
+  if (loading) return <CircularProgress />;
   if (error) return <p>Error: {error}</p>;
 
   return (
