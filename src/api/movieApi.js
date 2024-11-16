@@ -7,8 +7,12 @@ export const fetchMovies = (title) => async (dispatch) => {
   dispatch({ type: 'FETCH_MOVIES_REQUEST' });
   try {
     const response = await axios.get(`${API_URL}?s=${title}&apikey=${API_KEY}`);
-    console.log(response.data);
-    dispatch({ type: 'FETCH_MOVIES_SUCCESS', payload: response.data.Search });
+
+    if(response.data.Response === 'False'){
+      dispatch({ type: 'FETCH_MOVIES_FAILURE', payload: 'No movies found for this search.'});
+    }else{
+      dispatch({ type: 'FETCH_MOVIES_SUCCESS', payload: response.data.Search });
+    }
   } catch (error) {
     dispatch({ type: 'FETCH_MOVIES_FAILURE', payload: error.message });
   }

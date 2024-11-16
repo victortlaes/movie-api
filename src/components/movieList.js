@@ -9,6 +9,8 @@ import CardContent from '@mui/material/CardContent';
 import Typography from '@mui/material/Typography';
 import Grid from '@mui/material/Grid';
 import NoImage from '../public/noimage.png';
+import SearchMovieState from './searchMovieState';
+import MovieNotFound from './movieNotFound';
 
 const MovieList = ({ searchValue }) => {
   const dispatch = useDispatch();
@@ -18,8 +20,9 @@ const MovieList = ({ searchValue }) => {
     dispatch(fetchMovies(searchValue)); // busca por search
   }, [dispatch, searchValue]);
 
+  if(searchValue == '') return <SearchMovieState/>;
   if (loading) return <CircularProgress sx={{ color: '#FCBE11' }}/>;
-  if (error) return <p>Error: {error}</p>;
+  if (error) return <MovieNotFound/>;
 
   return (
     <div>
