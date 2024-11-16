@@ -2,13 +2,13 @@ import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { fetchMovies } from '../api/movieApi';
 
-const MovieList = () => {
+const MovieList = ({ searchValue }) => {
   const dispatch = useDispatch();
   const { movies, loading, error } = useSelector((state) => state);
 
   useEffect(() => {
-    dispatch(fetchMovies('batman')); // busca por search
-  }, [dispatch]);
+    dispatch(fetchMovies(searchValue)); // busca por search
+  }, [dispatch, searchValue]);
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error: {error}</p>;
