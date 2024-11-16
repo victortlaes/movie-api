@@ -1,0 +1,27 @@
+.search-input {
+    width: 100%;
+    border-radius: 8px; /* Arredondamento das bordas */
+    background-color: #4d5157; /* Cor de fundo */
+    border-radius: 128px;
+  }
+  
+  .search-input .MuiOutlinedInput-root {
+    border-color: #FCBE11; /* Cor da borda */
+    border-radius: 128px;
+  }
+  
+  .search-input .MuiOutlinedInput-root:hover fieldset {
+    border-color: #FCBE11; /* Cor da borda ao passar o mouse */
+  }
+  
+  .search-input .MuiOutlinedInput-root.Mui-focused fieldset {
+    border-color: #FCBE11; /* Cor da borda quando o campo está focado */
+  }
+
+  .search-input .MuiInputAdornment-root .MuiSvgIcon-root {
+    color: white; /* Cor do ícone (como a lupa) */
+  }
+
+  .search-input .MuiInputBase-root {
+    color: white; /* Cor do texto */
+  }
