@@ -15,7 +15,7 @@ const MovieList = ({ searchValue }) => {
 
   return (
     <div>
-      <h2>Movies</h2>
+      {/* <h2>Movies</h2> */}
       <ul>
         {movies && movies.map((movie) => (
           <li key={movie.imdbID}>{movie.Title} ({movie.Year})</li>
