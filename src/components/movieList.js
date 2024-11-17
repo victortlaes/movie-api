@@ -24,10 +24,13 @@ const MovieList = ({ searchValue }) => {
   if (loading) return <CircularProgress sx={{ color: '#FCBE11' }}/>;
   if (error) return <MovieNotFound/>;
 
+  const filteredMovies = movies?.filter((movie) => movie.Type === 'movie');
+
+
   return (
     <div>
       <Grid container spacing={2} justifyContent="center">
-        {movies && movies.map((movie) => (
+        {filteredMovies && filteredMovies.map((movie) => (
           <Grid item xs={6} md={6} sm={12} key={movie.imdbID}>
             <Card sx={{ display: 'flex', height: 150, overflow: 'hidden', borderRadius: 4, boxShadow: 2, color: 'white', backgroundColor: '#333' }}>
               <CardMedia
