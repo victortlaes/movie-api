@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const API_KEY = '7c56ac3b'; //api que recebi no email OMDB
-const API_URL = 'http://www.omdbapi.com/';
+const API_URL = 'https://www.omdbapi.com/';
 
 export const fetchMovies = (title) => async (dispatch) => {
   dispatch({ type: 'FETCH_MOVIES_REQUEST' });
