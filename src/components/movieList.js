@@ -20,7 +20,7 @@ const MovieList = ({ searchValue }) => {
     dispatch(fetchMovies(searchValue)); // busca por search
   }, [dispatch, searchValue]);
 
-  if(searchValue == '') return <SearchMovieState/>;
+  if(searchValue === '') return <SearchMovieState/>;
   if (loading) return <CircularProgress sx={{ color: '#FCBE11' }}/>;
   if (error) return <MovieNotFound/>;
 

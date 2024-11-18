@@ -2,7 +2,7 @@ import React from 'react';
 import searchStateSVG from '../public/curiosity search-rafiki.svg';
 
 
-const SearchMovieState = ({}) => {
+const SearchMovieState = () => {
   return (
     <div style={{width: 400, display: 'flex', flexDirection: 'column', justifyContent: 'center'}}>
       <img src={searchStateSVG} alt="Imagem filme não encontrado" />
