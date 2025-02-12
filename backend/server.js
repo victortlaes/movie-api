@@ -16,3 +16,9 @@ app.listen(PORT, () => console.log(`Servidor rodando na porta ${PORT}`));
 
 const authRoutes = require('./routes/auth');
 app.use('/auth', authRoutes);
+
+const movieRoutes = require('./routes/movies');
+app.use('/movies', movieRoutes);
+
+const favoriteRoutes = require('./routes/favorites');
+app.use('/favorites', favoriteRoutes);
