@@ -1,24 +1,40 @@
-import axios from 'axios';
-
-const API_KEY = '7c56ac3b'; //api que recebi no email OMDB
-const API_URL = 'https://www.omdbapi.com/';
+import api from './api';
 
 export const fetchMovies = (title) => async (dispatch) => {
-  dispatch({ type: 'FETCH_MOVIES_REQUEST' });
-  try {
-    const response = await axios.get(`${API_URL}?s=${title}&apikey=${API_KEY}`);
+    dispatch({ type: 'FETCH_MOVIES_REQUEST' });
 
-    if(response.data.Response === 'False'){
-      dispatch({ type: 'FETCH_MOVIES_FAILURE', payload: 'No movies found for this search.'});
-    }else{
-      dispatch({ type: 'FETCH_MOVIES_SUCCESS', payload: response.data.Search });
+    try {
+        const token = localStorage.getItem('token'); // Pegamos o token salvo no login
+
+        const response = await api.get(`/movies/search?title=${title}`, {
+            headers: { Authorization: `Bearer ${token}` } // Enviamos o token JWT
+        });
+
+        if (response.data.length === 0) {
+            dispatch({ type: 'FETCH_MOVIES_FAILURE', payload: 'Nenhum filme encontrado.' });
+        } else {
+            dispatch({ type: 'FETCH_MOVIES_SUCCESS', payload: response.data });
+        }
+    } catch (error) {
+        dispatch({ type: 'FETCH_MOVIES_FAILURE', payload: error.message });
     }
-  } catch (error) {
-    dispatch({ type: 'FETCH_MOVIES_FAILURE', payload: error.message });
-  }
 };
 
-export const selectMovie = (movie) => ({
-  type: 'SELECT_MOVIE',
-  payload: movie,
-});
+export const addToFavorites = (movie) => async (dispatch) => {
+    const token = localStorage.getItem('token');
+
+    try {
+        await api.post('/favorites/add', {
+            imdb_id: movie.imdbID,
+            titulo: movie.Title,
+            ano: movie.Year,
+            poster_url: movie.Poster
+        }, {
+            headers: { Authorization: `Bearer ${token}` }
+        });
+
+        dispatch({ type: 'ADD_TO_FAVORITES_SUCCESS', payload: movie });
+    } catch (error) {
+        dispatch({ type: 'ADD_TO_FAVORITES_FAILURE', payload: error.message });
+    }
+};
