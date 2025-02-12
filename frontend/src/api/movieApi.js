@@ -19,22 +19,3 @@ export const fetchMovies = (title) => async (dispatch) => {
         dispatch({ type: 'FETCH_MOVIES_FAILURE', payload: error.message });
     }
 };
-
-export const addToFavorites = (movie) => async (dispatch) => {
-    const token = localStorage.getItem('token');
-
-    try {
-        await api.post('/favorites/add', {
-            imdb_id: movie.imdbID,
-            titulo: movie.Title,
-            ano: movie.Year,
-            poster_url: movie.Poster
-        }, {
-            headers: { Authorization: `Bearer ${token}` }
-        });
-
-        dispatch({ type: 'ADD_TO_FAVORITES_SUCCESS', payload: movie });
-    } catch (error) {
-        dispatch({ type: 'ADD_TO_FAVORITES_FAILURE', payload: error.message });
-    }
-};

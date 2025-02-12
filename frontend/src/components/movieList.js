@@ -1,6 +1,7 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { fetchMovies } from '../api/movieApi';
+import { fetchFavorites, addToFavorites, removeFromFavorites } from '../api/favoritesApi';
 import CircularProgress from '@mui/material/CircularProgress';
 
 import Card from '@mui/material/Card';
@@ -8,6 +9,7 @@ import CardMedia from '@mui/material/CardMedia';
 import CardContent from '@mui/material/CardContent';
 import Typography from '@mui/material/Typography';
 import Grid from '@mui/material/Grid';
+import Button from '@mui/material/Button';
 import NoImage from '../public/noimage.png';
 import SearchMovieState from './searchMovieState';
 import MovieNotFound from './movieNotFound';
@@ -16,9 +18,29 @@ const MovieList = ({ searchValue }) => {
   const dispatch = useDispatch();
   const { movies, loading, error } = useSelector((state) => state);
 
+  //Favoritos
+  const [favorites, setFavorites] = useState([]);
+
   useEffect(() => {
     dispatch(fetchMovies(searchValue)); // busca por search
+
+    carregarFavoritos();
   }, [dispatch, searchValue]);
+
+  const carregarFavoritos = async () => {
+    const favoritosData = await fetchFavorites();
+    setFavorites(favoritosData);
+  };
+
+  const handleAddFavorite = async (movie) => {
+      await addToFavorites(movie);
+      carregarFavoritos(); // Atualiza lista de favoritos
+  };
+
+  const handleRemoveFavorite = async (imdbID) => {
+      await removeFromFavorites(imdbID);
+      carregarFavoritos(); // Atualiza lista de favoritos
+  };
 
   if(searchValue === '') return <SearchMovieState/>;
   if (loading) return <CircularProgress sx={{ color: '#FCBE11' }}/>;
@@ -50,6 +72,16 @@ const MovieList = ({ searchValue }) => {
                 <Typography variant="body2" color="#757575">
                   {movie.Year}
                 </Typography>
+
+                {favorites.some(fav => fav.imdb_id === movie.imdbID) ? (
+                      <Button variant="contained" color="error" size="small" onClick={() => handleRemoveFavorite(movie.imdbID)}>
+                          Remover dos Favoritos
+                      </Button>
+                  ) : (
+                      <Button variant="contained" color="primary" size="small" onClick={() => handleAddFavorite(movie)}>
+                          Favoritar
+                      </Button>
+                )}
               </CardContent>
             </Card>
           </Grid>
