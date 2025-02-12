@@ -1,0 +1,16 @@
+{
+  "files": {
+    "main.css": "/static/css/main.086218d6.css",
+    "main.js": "/static/js/main.865a4420.js",
+    "static/media/Film rolls-rafiki.svg": "/static/media/Film rolls-rafiki.8fc74442a53cdd8c8b9c95a389c6674d.svg",
+    "static/media/noimage.png": "/static/media/noimage.c85f56a3412c3d5f97d0.png",
+    "static/media/curiosity search-rafiki.svg": "/static/media/curiosity search-rafiki.0664ab30372f9142b244f9a6ed34a859.svg",
+    "index.html": "/index.html",
+    "main.086218d6.css.map": "/static/css/main.086218d6.css.map",
+    "main.865a4420.js.map": "/static/js/main.865a4420.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.086218d6.css",
+    "static/js/main.865a4420.js"
+  ]
+}

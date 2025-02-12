@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const jwt = require('jsonwebtoken');
 const pool = require('../db.js'); // Importa a conexão com o MySQL
+const logAction = require('../logger');
 
 const JWT_SECRET = 'galaodamassa13'; // Defina uma chave segura para tokens
 
@@ -24,6 +25,7 @@ router.post('/login', async (req, res) => {
             return res.status(401).json({ error: 'Senha incorreta' });
         }
 
+        logAction(`Usuário ${email} fez login com sucesso`);
         // Gera um token JWT
         const token = jwt.sign({ id: user.id }, JWT_SECRET, { expiresIn: '1h' });
 

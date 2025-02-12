@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const pool = require('../db');
 const jwt = require('jsonwebtoken');
+const logAction = require('../logger');
 
 const JWT_SECRET = 'galaodamassa13'; // Mesma chave usada no login
 
@@ -33,6 +34,7 @@ router.post('/add', authenticateToken, async (req, res) => {
             [userId, imdb_id, titulo, ano, poster_url]
         );
 
+        logAction(`Usuário ${email} favoritou com sucesso`);
         res.json({ message: 'Filme salvo como favorito!' });
     } catch (err) {
         if (err.code === 'ER_DUP_ENTRY') {
@@ -52,6 +54,7 @@ router.get('/list', authenticateToken, async (req, res) => {
             [userId]
         );
 
+        logAction(`Usuário ${email} visualizou filmes com sucesso`);
         res.json(favoritos);
     } catch (err) {
         res.status(500).json({ error: 'Erro ao buscar favoritos' });
@@ -73,6 +76,7 @@ router.delete('/remove/:imdb_id', authenticateToken, async (req, res) => {
             return res.status(404).json({ error: 'Filme não encontrado nos favoritos' });
         }
 
+        logAction(`Usuário ${email} removeu com sucesso`);
         res.json({ message: 'Filme removido dos favoritos com sucesso!' });
     } catch (err) {
         res.status(500).json({ error: 'Erro ao remover filme dos favoritos' });

@@ -3,8 +3,11 @@ const express = require('express');
 const cors = require('cors');
 
 const app = express();
+const compression = require('compression');
 app.use(express.json());
 app.use(cors());
+app.use(compression());
+
 
 // Rota de teste
 app.get('/', (req, res) => {
