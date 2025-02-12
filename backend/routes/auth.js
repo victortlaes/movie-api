@@ -1,25 +1,35 @@
 const express = require('express');
 const router = express.Router();
-const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const pool = require('../db');
+const pool = require('../db.js'); // Importa a conexão com o MySQL
 
+const JWT_SECRET = 'galaodamassa13'; // Defina uma chave segura para tokens
+
+
+// Rota de login de usuário
 router.post('/login', async (req, res) => {
-    const { email, password } = req.body;
+    const { email, senha } = req.body;
 
     try {
-        const user = await pool.query('SELECT * FROM users WHERE email = $1', [email]);
+        const [users] = await pool.query('SELECT * FROM users WHERE email = ?', [email]);
 
-        if (user.rows.length === 0) return res.status(400).json({ error: 'Usuário não encontrado' });
+        if (users.length === 0) {
+            return res.status(400).json({ error: 'Usuário ' + email + ' não encontrado' });
+        }
 
-        const isValid = await bcrypt.compare(password, user.rows[0].password);
-        if (!isValid) return res.status(401).json({ error: 'Senha incorreta' });
+        const user = users[0];
 
-        const token = jwt.sign({ id: user.rows[0].id }, process.env.JWT_SECRET, { expiresIn: '1h' });
+        // Verifica se a senha está correta (Sem bcrypt, senha em texto plano)
+        if (user.senha !== senha) {
+            return res.status(401).json({ error: 'Senha incorreta' });
+        }
+
+        // Gera um token JWT
+        const token = jwt.sign({ id: user.id }, JWT_SECRET, { expiresIn: '1h' });
 
         res.json({ token });
     } catch (err) {
-        res.status(500).json({ error: 'Erro no servidor' });
+        res.status(500).json({ error: 'Erro no servidor!' });
     }
 });
 
