@@ -31,11 +31,12 @@ export const addToFavorites = async (movie) => {
     }
 };
 
-export const removeFromFavorites = async (imdbID) => {
+export const removeFromFavorites = async (imdbID, titulo) => {
     const token = localStorage.getItem('token');
 
     try {
         await api.delete(`/favorites/remove/${imdbID}`, {
+            data: { titulo },
             headers: { Authorization: `Bearer ${token}` }
         });
     } catch (error) {

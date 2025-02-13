@@ -3,13 +3,15 @@ const router = express.Router();
 const jwt = require('jsonwebtoken');
 const pool = require('../db.js'); // Importa a conexão com o MySQL
 const logAction = require('../logger');
+const bcrypt = require('bcryptjs');
 
 const JWT_SECRET = 'galaodamassa13'; // Defina uma chave segura para tokens
 
 
 // Rota de login de usuário
 router.post('/login', async (req, res) => {
-    const { email, senha } = req.body;
+    const { email, senha_hash } = req.body;
+    console.log(req.body);
 
     try {
         const [users] = await pool.query('SELECT * FROM users WHERE email = ?', [email]);
@@ -20,14 +22,14 @@ router.post('/login', async (req, res) => {
 
         const user = users[0];
 
-        // Verifica se a senha está correta (Sem bcrypt, senha em texto plano)
-        if (user.senha !== senha) {
+        const isPasswordValid = await bcrypt.compare(senha_hash, user.senha_hash);
+        if (!isPasswordValid) {
             return res.status(401).json({ error: 'Senha incorreta' });
         }
 
         logAction(`Usuário ${email} fez login com sucesso`);
         // Gera um token JWT
-        const token = jwt.sign({ id: user.id }, JWT_SECRET, { expiresIn: '1h' });
+        const token = jwt.sign({ id: user.id, email: user.email }, JWT_SECRET, { expiresIn: '1h' });
 
         res.json({ token });
     } catch (err) {

@@ -22,6 +22,8 @@ const authenticateToken = (req, res, next) => {
 router.post('/add', authenticateToken, async (req, res) => {
     const { imdb_id, titulo, ano, poster_url } = req.body;
     const userId = req.user.id;
+    const userEmail = req.user.email;
+
 
     if (!imdb_id || !titulo || !ano) {
         return res.status(400).json({ error: 'Todos os campos são obrigatórios' });
@@ -34,7 +36,7 @@ router.post('/add', authenticateToken, async (req, res) => {
             [userId, imdb_id, titulo, ano, poster_url]
         );
 
-        logAction(`Usuário ${email} favoritou com sucesso`);
+        logAction(`Usuário ${userEmail} favoritou o filme ${titulo} com sucesso`);
         res.json({ message: 'Filme salvo como favorito!' });
     } catch (err) {
         if (err.code === 'ER_DUP_ENTRY') {
@@ -54,7 +56,6 @@ router.get('/list', authenticateToken, async (req, res) => {
             [userId]
         );
 
-        logAction(`Usuário ${email} visualizou filmes com sucesso`);
         res.json(favoritos);
     } catch (err) {
         res.status(500).json({ error: 'Erro ao buscar favoritos' });
@@ -64,7 +65,9 @@ router.get('/list', authenticateToken, async (req, res) => {
 // Rota para remover um filme dos favoritos
 router.delete('/remove/:imdb_id', authenticateToken, async (req, res) => {
     const userId = req.user.id;
+    const userEmail = req.user.email;
     const { imdb_id } = req.params;
+    const { titulo } = req.body;
 
     try {
         const [result] = await pool.query(
@@ -76,7 +79,7 @@ router.delete('/remove/:imdb_id', authenticateToken, async (req, res) => {
             return res.status(404).json({ error: 'Filme não encontrado nos favoritos' });
         }
 
-        logAction(`Usuário ${email} removeu com sucesso`);
+        logAction(`Usuário ${userEmail} desfavoritou o filme ${titulo} com sucesso`);
         res.json({ message: 'Filme removido dos favoritos com sucesso!' });
     } catch (err) {
         res.status(500).json({ error: 'Erro ao remover filme dos favoritos' });

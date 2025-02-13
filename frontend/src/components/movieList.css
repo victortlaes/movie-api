@@ -1,0 +1,13 @@
+.subtitulo{
+    display: flex;
+    justify-content: space-between;
+}
+
+.subtitulo-texto{
+    display: flex;
+    flex-direction: column;
+}
+
+.MuiCardContent-root{
+    width: 100%;
+}

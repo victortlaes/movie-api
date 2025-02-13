@@ -13,6 +13,9 @@ import Button from '@mui/material/Button';
 import NoImage from '../public/noimage.png';
 import SearchMovieState from './searchMovieState';
 import MovieNotFound from './movieNotFound';
+import StarIcon from '@mui/icons-material/Star';
+import StarBorderIcon from '@mui/icons-material/StarBorder';
+import './movieList.css'
 
 const MovieList = ({ searchValue }) => {
   const dispatch = useDispatch();
@@ -37,8 +40,8 @@ const MovieList = ({ searchValue }) => {
       carregarFavoritos(); // Atualiza lista de favoritos
   };
 
-  const handleRemoveFavorite = async (imdbID) => {
-      await removeFromFavorites(imdbID);
+  const handleRemoveFavorite = async (imdbID,titulo) => {
+      await removeFromFavorites(imdbID,titulo);
       carregarFavoritos(); // Atualiza lista de favoritos
   };
 
@@ -66,22 +69,27 @@ const MovieList = ({ searchValue }) => {
                 <Typography variant="h6" component="div">
                   {movie.Title}
                 </Typography>
-                <Typography variant="body2" color="#757575">
-                  {movie.Type}
-                </Typography>
-                <Typography variant="body2" color="#757575">
-                  {movie.Year}
-                </Typography>
+                <div className="subtitulo">
+                  <div className="subtitulo-textos">
+                    <Typography variant="body2" color="#757575">
+                      {movie.Type}
+                    </Typography>
+                    <Typography variant="body2" color="#757575">
+                      {movie.Year}
+                    </Typography>
+                  </div>
 
-                {favorites.some(fav => fav.imdb_id === movie.imdbID) ? (
-                      <Button variant="contained" color="error" size="small" onClick={() => handleRemoveFavorite(movie.imdbID)}>
-                          Remover dos Favoritos
-                      </Button>
-                  ) : (
-                      <Button variant="contained" color="primary" size="small" onClick={() => handleAddFavorite(movie)}>
-                          Favoritar
-                      </Button>
-                )}
+
+                  {favorites.some(fav => fav.imdb_id === movie.imdbID) ? (
+                        <Button variant="contained" color="secondary" size="small" onClick={() => handleRemoveFavorite(movie.imdbID, movie.Title)}>
+                            <StarIcon></StarIcon>
+                        </Button>
+                    ) : (
+                        <Button variant="contained" color="primary" size="small" onClick={() => handleAddFavorite(movie)}>
+                            <StarBorderIcon></StarBorderIcon>
+                        </Button>
+                  )}
+                </div>
               </CardContent>
             </Card>
           </Grid>

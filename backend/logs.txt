@@ -1,0 +1,5 @@
+2025-02-13T01:26:44.899Z - Usuário admin fez login com sucesso
+2025-02-13T01:27:54.557Z - Usuário admin fez login com sucesso
+2025-02-13T01:28:48.020Z - Usuário admin favoritou o filme Se7en com sucesso
+2025-02-13T01:29:08.759Z - Usuário admin favoritou o filme Harry Potter and the Deathly Hallows: Part 2 com sucesso
+2025-02-13T01:29:24.938Z - Usuário admin favoritou o filme The Lord of the Rings: The Fellowship of the Ring com sucesso

@@ -29,6 +29,7 @@ router.get('/search', authenticateToken, async (req, res) => {
     // Verifica se já temos a resposta em cache
     const cachedMovies = cache.get(title);
     if (cachedMovies) {
+        console.log("Carregou do cache!")
         return res.json(cachedMovies);
     }
 
