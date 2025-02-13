@@ -1,13 +1,13 @@
 const express = require('express');
-const axios = require('axios'); // Para fazer requisições à API OMDb
+const axios = require('axios');
 const router = express.Router();
-const pool = require('../db'); // Importa o banco de dados
+const pool = require('../db');
 const jwt = require('jsonwebtoken');
 const cache = require('../cache');
 
 const API_KEY = '7c56ac3b';
 const API_URL = 'https://www.omdbapi.com/';
-const JWT_SECRET = 'galaodamassa13'; // A mesma chave usada no login
+const JWT_SECRET = 'galaodamassa13';
 
 // Middleware para verificar o token JWT
 const authenticateToken = (req, res, next) => {

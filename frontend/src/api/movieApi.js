@@ -4,10 +4,10 @@ export const fetchMovies = (title) => async (dispatch) => {
     dispatch({ type: 'FETCH_MOVIES_REQUEST' });
 
     try {
-        const token = localStorage.getItem('token'); // Pegamos o token salvo no login
+        const token = localStorage.getItem('token');
 
         const response = await api.get(`/movies/search?title=${title}`, {
-            headers: { Authorization: `Bearer ${token}` } // Enviamos o token JWT
+            headers: { Authorization: `Bearer ${token}` }
         });
 
         if (response.data.length === 0) {

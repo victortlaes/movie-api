@@ -4,7 +4,7 @@ const pool = require('../db');
 const jwt = require('jsonwebtoken');
 const logAction = require('../logger');
 
-const JWT_SECRET = 'galaodamassa13'; // Mesma chave usada no login
+const JWT_SECRET = 'galaodamassa13';
 
 // Middleware para verificar autenticação
 const authenticateToken = (req, res, next) => {

@@ -1,11 +1,11 @@
 const express = require('express');
 const router = express.Router();
 const jwt = require('jsonwebtoken');
-const pool = require('../db.js'); // Importa a conexão com o MySQL
+const pool = require('../db.js');
 const logAction = require('../logger');
 const bcrypt = require('bcryptjs');
 
-const JWT_SECRET = 'galaodamassa13'; // Defina uma chave segura para tokens
+const JWT_SECRET = 'galaodamassa13';
 
 
 // Rota de login de usuário
