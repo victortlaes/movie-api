@@ -4,6 +4,7 @@ const router = express.Router();
 const pool = require('../db');
 const jwt = require('jsonwebtoken');
 const cache = require('../cache');
+const { check, validationResult } = require('express-validator');
 
 const API_KEY = '7c56ac3b';
 const API_URL = 'https://www.omdbapi.com/';
@@ -22,7 +23,19 @@ const authenticateToken = (req, res, next) => {
 };
 
 // Rota de busca de filmes (protegida por autenticação)
-router.get('/search', authenticateToken, async (req, res) => {
+router.get('/search', authenticateToken, [
+    check('title')
+        .trim()
+        .escape()
+        .notEmpty().withMessage('O título do filme é obrigatório')
+        .matches(/^[a-zA-Z0-9\s]+$/).withMessage('O título contém caracteres inválidos')
+], async (req, res) => {
+    // Captura erros de validação
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+    }
+
     const { title } = req.query;
     if (!title) return res.status(400).json({ error: 'O título do filme é obrigatório' });
 

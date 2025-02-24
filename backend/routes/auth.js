@@ -4,16 +4,35 @@ const jwt = require('jsonwebtoken');
 const pool = require('../db.js');
 const logAction = require('../logger');
 const bcrypt = require('bcryptjs');
+const { check, validationResult } = require('express-validator');
 
 const JWT_SECRET = 'galaodamassa13';
 
 
 // Rota de login de usuário
-router.post('/login', async (req, res) => {
+router.post('/login', [
+    check('email')
+        .trim()
+        .escape()
+        .isEmail()
+        .normalizeEmail()
+        .withMessage('Email inválido'),
+    check('senha_hash')
+        .trim()
+        .escape()
+        .isLength({ min: 6 })
+        .withMessage('A senha deve ter pelo menos 6 caracteres')
+    ], async (req, res) => {
+
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+    }
+
     const { email, senha_hash } = req.body;
     console.log(req.body);
 
-    // Verificacao dos parametros - Verificando se campos foram preenchidos
+    // Verificacao dos parametros - Verificando se campos foram preenchidos (Agora nao sei se faz sentido as validacoes mesmo apos utilizar o sanitizer)
     if (!email || !senha_hash) {
         return res.status(400).json({ error: 'Email e senha são obrigatórios' });
     }

@@ -3,6 +3,7 @@ const router = express.Router();
 const pool = require('../db');
 const jwt = require('jsonwebtoken');
 const logAction = require('../logger');
+const { check, validationResult } = require('express-validator');
 
 const JWT_SECRET = 'galaodamassa13';
 
@@ -19,7 +20,18 @@ const authenticateToken = (req, res, next) => {
 };
 
 // Rota para salvar um filme como favorito
-router.post('/add', authenticateToken, async (req, res) => {
+router.post('/add', authenticateToken, [
+    check('imdb_id').trim().escape().notEmpty().withMessage('imdb_id é obrigatório'),
+    check('titulo').trim().escape().notEmpty().withMessage('Título é obrigatório'),
+    check('ano').isInt({ min: 1900, max: new Date().getFullYear() }).withMessage('Ano inválido'),
+    check('poster_url').optional().isURL().withMessage('URL inválida')
+], async (req, res) => {
+    // Captura erros de validação
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+    }
+
     const { imdb_id, titulo, ano, poster_url } = req.body;
     const userId = req.user.id;
     const userEmail = req.user.email;
@@ -68,7 +80,16 @@ router.get('/list', authenticateToken, async (req, res) => {
 });
 
 // Rota para remover um filme dos favoritos
-router.delete('/remove/:imdb_id', authenticateToken, async (req, res) => {
+router.delete('/remove/:imdb_id', authenticateToken, [
+    check('imdb_id').trim().escape().notEmpty().withMessage('imdb_id é obrigatório'),
+    check('titulo').optional().trim().escape()
+], async (req, res) => {
+    // Captura erros de validação
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+    }
+
     const userId = req.user.id;
     const userEmail = req.user.email;
     const { imdb_id } = req.params;
