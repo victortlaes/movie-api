@@ -1,4 +1,6 @@
 require('dotenv').config();
+const fs = require('fs');
+const https = require('https');
 const express = require('express');
 const cors = require('cors');
 
@@ -8,14 +10,16 @@ app.use(express.json());
 app.use(cors());
 app.use(compression());
 
-
-// Rota de teste
-app.get('/', (req, res) => {
-    res.send('API funcionando!');
-});
+// Carregando cert SSL para Https
+const options = {
+    key: fs.readFileSync('server.key'),  // Chave privada
+    cert: fs.readFileSync('server.cert') // Certificado
+};
 
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => console.log(`Servidor rodando na porta ${PORT}`));
+https.createServer(options, app).listen(PORT, () => {
+    console.log(`Servidor rodando com HTTPS na porta ${PORT}`);
+});
 
 const authRoutes = require('./routes/auth');
 app.use('/auth', authRoutes);
@@ -25,3 +29,4 @@ app.use('/movies', movieRoutes);
 
 const favoriteRoutes = require('./routes/favorites');
 app.use('/favorites', favoriteRoutes);
+
