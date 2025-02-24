@@ -1,11 +1,28 @@
-const fs = require('fs');
+const winston = require('winston');
 const path = require('path');
 
-const logFilePath = path.join(__dirname, 'logs.txt');
+// Configuração do logger
+const logger = winston.createLogger({
+    level: 'info',
+    format: winston.format.combine(
+        winston.format.timestamp(),
+        winston.format.json()
+    ),
+    transports: [
+        new winston.transports.File({ filename: path.join(__dirname, 'logs', 'error.log'), level: 'error' }),
+        new winston.transports.File({ filename: path.join(__dirname, 'logs', 'combined.log') })
+    ]
+});
 
+if (process.env.NODE_ENV !== 'production') {
+    logger.add(new winston.transports.Console({
+        format: winston.format.simple()
+    }));
+}
+
+// Função para registrar ações específicas
 const logAction = (message) => {
-    const logMessage = `${new Date().toISOString()} - ${message}\n`;
-    fs.appendFileSync(logFilePath, logMessage, 'utf8');
+    logger.info(message);
 };
 
-module.exports = logAction;
+module.exports = { logger, logAction };

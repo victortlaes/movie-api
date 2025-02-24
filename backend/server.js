@@ -3,12 +3,15 @@ const fs = require('fs');
 const https = require('https');
 const express = require('express');
 const cors = require('cors');
+const { logger } = require('./logger');
+
 
 const app = express();
 const compression = require('compression');
 app.use(express.json());
 app.use(cors());
 app.use(compression());
+
 
 const rateLimit = require('express-rate-limit');
 
@@ -17,9 +20,13 @@ const limiter = rateLimit({
     max: 100, // Máximo de 100 requisições por IP a cada 15 minutos
     message: { error: 'Muitas requisições. Tente novamente mais tarde.' }
 });
-
 // Aplica o Rate Limiter a todas as rotas
 app.use(limiter);
+
+app.use((req, res, next) => {
+    logger.info(`Requisição recebida: ${req.method} ${req.url} - IP: ${req.ip}`);
+    next();
+});
 
 const authRoutes = require('./routes/auth');
 app.use('/auth', authRoutes);
