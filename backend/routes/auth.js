@@ -13,6 +13,18 @@ router.post('/login', async (req, res) => {
     const { email, senha_hash } = req.body;
     console.log(req.body);
 
+    // Verificacao dos parametros - Verificando se campos foram preenchidos
+    if (!email || !senha_hash) {
+        return res.status(400).json({ error: 'Email e senha são obrigatórios' });
+    }
+
+    // Verificacao dos parametros - Verifica se o email tem um formato válido
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+        return res.status(400).json({ error: 'Email inválido' });
+    }
+    
+
     try {
         const [users] = await pool.query('SELECT * FROM users WHERE email = ?', [email]);
 

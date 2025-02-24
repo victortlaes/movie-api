@@ -29,6 +29,11 @@ router.post('/add', authenticateToken, async (req, res) => {
         return res.status(400).json({ error: 'Todos os campos são obrigatórios' });
     }
 
+    // Verificacao dos parametros - Verifica se o ano é um número válido
+    if (!/^\d{4}$/.test(ano)) {
+        return res.status(400).json({ error: 'Ano inválido. Deve conter 4 dígitos numéricos.' });
+    }
+
     try {
         // Insere no banco de dados
         await pool.query(
