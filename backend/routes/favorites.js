@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const pool = require('../db');
 const jwt = require('jsonwebtoken');
+const { cache, logCache } = require('../cache');
 const logAction = require('../logger');
 const { check, validationResult } = require('express-validator');
 
@@ -53,6 +54,7 @@ router.post('/add', authenticateToken, [
             [userId, imdb_id, titulo, ano, poster_url]
         );
 
+        cache.del(`favoritos_${userId}`);
         logAction(`Usuário ${userEmail} favoritou o filme ${titulo} com sucesso`);
         res.json({ message: 'Filme salvo como favorito!' });
     } catch (err) {
@@ -67,11 +69,20 @@ router.post('/add', authenticateToken, [
 router.get('/list', authenticateToken, async (req, res) => {
     const userId = req.user.id;
 
+    const cachedFavorites = cache.get(`favoritos_${userId}`);
+    if (cachedFavorites) {
+        logCache(`favoritos_${userId}`, "Recuperado do cache");
+        return res.json(cachedFavorites);
+    }
+
     try {
         const [favoritos] = await pool.query(
             'SELECT imdb_id, titulo, ano, poster_url FROM favoritos WHERE user_id = ?',
             [userId]
         );
+
+        cache.set(`favoritos_${userId}`, favoritos, 600);
+        logCache(`favoritos_${userId}`, "Salvo no cache");
 
         res.json(favoritos);
     } catch (err) {
@@ -105,7 +116,10 @@ router.delete('/remove/:imdb_id', authenticateToken, [
             return res.status(404).json({ error: 'Filme não encontrado nos favoritos' });
         }
 
+        cache.del(`favoritos_${userId}`);
+        logCache(`favoritos_${userId}`, "Removido do cache");
         logAction(`Usuário ${userEmail} desfavoritou o filme ${titulo} com sucesso`);
+    
         res.json({ message: 'Filme removido dos favoritos com sucesso!' });
     } catch (err) {
         res.status(500).json({ error: 'Erro ao remover filme dos favoritos' });
